@@ -18,7 +18,7 @@
             <a href="javascript:void(0)"><i class="back"></i></a>
 
         </nav>
-        <div class="main_title">十年漫威限定 超夯鋼鐵人戰衣「我是鋼鐵人」─ 鋼鐵人十年致敬T恤！敬鋼鐵人，敬道尼，愛你三千遍！！</div>
+        <div class="main_title">{{shopDetail.singleTitle}}</div>
         <nav class="nav am-fr">
             <a> </a>
         </nav>
@@ -61,15 +61,15 @@
             </div>
         </div>
         <div class="goodsInfo">
-            <div class="sitename">十年漫威限定 超夯鋼鐵人戰衣「我是鋼鐵人」─ 鋼鐵人十年致敬T恤！敬鋼鐵人，敬道尼，愛你三千遍！！</div>
+            <div class="sitename">{{shopDetail.singleTitle}}</div>
             <div class="pricebar">
                 <div class="subleft avil">
                     <div class="goodsprice">
-                        NT<strong class="small">1380</strong>
+                        {{shopDetail.currencyCode}}<strong class="small">{{shopDetail.promotionPrice}}</strong>
                     </div>
                     <div class="information">
                         <div class="oprice">
-                            <del>NT 1999</del>
+                            <del>{{shopDetail.currencyCode}} {{shopDetail.originalPrice}}</del>
                         </div>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
                     <span class="process_color"></span>
                 </span>
                 <span style="width: 20%;">
-                    <span class="count">46513</span>件
+                    <span class="count">{{shopDetail.buyers}}</span>件
                 </span>
             </span>
             </div>
@@ -123,16 +123,6 @@
                 style="font-size: 24px;"></span></b><br class="Apple-interchange-newline"></p>
         <p><img src="http://cdn.seezt.cc/uploadimages/20195/BBhPpgv_Yop7OvKEGwCD40UHw.jpg" data-filename="" width="100%"
                 style="width: 100%;"><br></p>
-    </div>
-    <div class="view_panel_hd">查詢訂單信息</div>
-    <div class="view_panel_bd am-form">
-        <div class="am-form-group">
-            <input type="text" id="expressinfo" class="" placeholder="請填寫您的訂單號，收貨電話或收貨人">
-            <span class="am-input-group-btn">
-            <button class="btn btn-danger find-btn find-order">查詢</button>
-        </span>
-        </div>
-        <ul id="find_result" class="comment_ul"></ul>
     </div>
     <div class="view_panel_hd" id="buy" style="padding-top:40px;">訂單商品</div>
     <div class="view_panel_bd">
@@ -390,11 +380,34 @@
 <script>
     var app = new Vue({
         el: '#app',
-        data: {
-
+        data () {
+            return {
+                shopData: {},
+                shopDetail: {},
+                shopTemplate: {}
+            }
+        },
+        created () {
+            this.getData()
         },
         methods: {
-            get
+            getData () {
+                var self = this
+                $.ajax({
+                    type: "get",
+                    headers: {
+                        Accept: "application/json; charset=utf-8",
+                    },
+                    url: 'https://ka.ikallc.com/shop/36',
+                    // dataType: "jsonp",
+                    success (res) {
+                        self.shopData = res
+                        self.shopDetail = res.detail
+                        self.shopTemplate = res.template
+                        console.log(self.shopData)
+                    }
+                })
+            }
         }
     })
 </script>
