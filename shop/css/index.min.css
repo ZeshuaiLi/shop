@@ -847,7 +847,7 @@ span .order-numbers {
 
 .product_item {
     padding: 0 10px;
-    border: 1px solid #f86161;
+    /*border: 1px solid #f86161;*/
     margin-bottom: 5px
 }
 
@@ -1807,4 +1807,14 @@ div.marquee-wrapper {
     padding: 0 10px 0 30px;
     box-shadow: 0 0 10px rgba(0, 0, 0, .5);
     background-color: #fff
+}
+.shop_attr{
+    background-color: #fff;
+}
+.shop_img{
+
+}
+.shop_img img{
+    display: block;
+    width: 100%;
 }
