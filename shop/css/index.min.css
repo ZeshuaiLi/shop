@@ -847,7 +847,7 @@ span .order-numbers {
 
 .product_item {
     padding: 0 10px;
-    /*border: 1px solid #f86161;*/
+    border: 1px solid #f86161;
     margin-bottom: 5px
 }
 
@@ -908,7 +908,10 @@ span .order-numbers {
     text-align: center;
     word-break: break-all;
     padding: 0 5px;
-    line-height: 20px
+    /*line-height: 20px*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .spec_List > .spec_Item > span, .gift_List > .gift_Item > span {

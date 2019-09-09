@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" href="css/index.min.css">
     <link rel="stylesheet" href="./css/banner.min.css">
+    <link rel="stylesheet" href="./css/layer.css">
     <script src="./js/jquery-1.10.1.min.js"></script>
 </head>
 <body>
@@ -90,7 +91,7 @@
     </div>
     <div class="cart-box-fixed">
         <div class="action-btn">
-            <a class="btn btn-danger go-buy">立即購買</a>
+            <a class="btn btn-danger go-buy" @click="submit">立即購買</a>
         </div>
     </div>
     <div id="goodsbody" class="view_panel_hd">
@@ -103,24 +104,31 @@
     </div>
     <div class="shop_attr">
         <div class="view_panel_hd" id="buy">訂單商品</div>
-        <div class="shop_img">
-            <img :src="selectedShopImg">
-        </div>
+        <!--<div class="shop_img">-->
+            <!--<img :src="selectedShopImg">-->
+        <!--</div>-->
         <div class="spec_Groups">
             <div class="spec_List option1" style="padding: 0 10px;">
                 <div class="option_Item opt2" :class="{'active':item.name == submitShopDetail.name}" v-for="item in shopData.many_off" @click="chooseType(item)">{{item.name}}</div>
                 <!--<div class="option_Item opt2">啊哈哈</div>-->
             </div>
-            <div class="product_item" v-if="shopData && shopData.attr1 && shopData.attr1.name && shopData.attr1.attr.length > 0">
-                <div class="spec_Title">{{shopData && shopData.attr1.name}}</div>
-                <div class="spec_List option1">
-                    <div class="option_Item opt2" :class="{'active':item.val == submitShopDetail.attr1}" v-for="item in shopData.attr1.attr" @click="chooseAttr1(item)">{{item.val}}</div>
-                </div>
-            </div>
-            <div class="product_item">
-                <div class="spec_Title">尺碼</div>
-                <div class="spec_List option1" v-if="shopData && shopData.attr2 && shopData.attr2.values.length > 0">
-                    <div class="option_Item opt2" :class="{'active':item == submitShopDetail.attr2}" v-for="item in shopData.attr2.values" @click="chooseAttr2(item)">{{item}}</div>
+            <div v-if="shopData && shopData.attr1 && shopData.attr1.name && shopData.attr1.attr.length > 0">
+                <div class="product_item" v-for="(count,index) in submitShopDetail.attr" :key = "index">
+                    <div class="spec_Title">{{index+1}}件{{shopData && shopData.attr1.name}}</div>
+                    <!--<div class="spec_List option1">-->
+                        <!--<div class="option_Item opt2" :class="{'active':item.val == submitShopDetail.attr1}" v-for="item in shopData.attr1.attr" @click="chooseAttr1(item)">{{item.val}}</div>-->
+                    <!--</div>-->
+                    <div class="spec_List user-name">
+                        <div class="spec_Item opt1" :class="{'active':item.val == submitShopDetail.attr[index].attr1}" @click="chooseAttr1(item,index)" v-for="item in shopData.attr1.attr">
+                            <div class="sticky"></div>
+                            <img :src="global_url + item.img.replace(/uploads/g,'')">
+                            <span>{{item.val}}</span>
+                        </div>
+                    </div>
+                    <div class="spec_Title">{{index+1}}件{{shopData && shopData.attr2.name}}</div>
+                    <div class="spec_List option1" v-if="shopData && shopData.attr2 && shopData.attr2.values.length > 0">
+                        <div class="option_Item opt2" :class="{'active':item == submitShopDetail.attr[index].attr2}" v-for="item in shopData.attr2.values" @click="chooseAttr2(item,index)">{{item}}</div>
+                    </div>
                 </div>
             </div>
             <div class="spec_Title"><span>金額</span><span class="price">NT {{shopDetail.promotionPrice}}</span></div>
@@ -134,43 +142,28 @@
                 <div class="am-form-group">
                     <label for="clientname" class="clientname"></label>
                     <div>
-                        <input type="text" id="clientname" placeholder="收貨人（必填）">
+                        <input v-model="submitShopDetail.consignee" type="text" id="clientname" placeholder="收貨人（必填）">
                     </div>
                 </div>
                 <div class="am-form-group">
                     <label for="clientphone" class="clientphone"></label>
                     <div>
-                        <input type="text" id="clientphone" placeholder="聯絡電話（必填）">
+                        <input v-model="submitShopDetail.tel" type="text" id="clientphone" placeholder="聯絡電話（必填）">
                     </div>
                 </div>
 
                 <div class="am-form-group">
                     <label for="city" class="province"></label>
                     <div>
-                        <select class="select" id="city"></select>
-                        <select class="select" id="area"></select>
+                        <select v-model="selectedCityObj" class="select" id="city" @change="changeCity">
+                            <option disabled selected="selected" value="-1" >请选择</option>
+                            <option v-for="item in cityList" :key="item.id" :value="item">{{item.city}}</option>
+                        </select>
+                        <select v-model="area" class="select" id="area">
+                            <option v-for="item in selectedCityObj.area" :key="item.area" :value="item.area">{{item.area}}</option>
+                        </select>
                     </div>
                 </div>
-
-                <div class="am-form-group" id="address_type">
-                    <label class="province"></label>
-                    <div id="address_method" style="line-height:30px;">
-                        <label for="address1" class="radio">
-                            <span class="radio-bg"></span>
-                            <input type="radio" name="address" id="address1" value="cod" checked="checked"/>宅配
-                            <span class="radio-on"></span>
-                        </label>
-
-                        <label for="address2" class="radio">
-                            <span class="radio-bg"></span>
-                            <input type="radio" name="address" id="address2" value="711"/> 7-11超商取貨
-                            <span class="radio-on"></span>
-                        </label>
-
-
-                    </div>
-                </div>
-
                 <div class="am-form-group hide" id="twroad">
                     <label class="clientaddress"></label>
                     <div>
@@ -182,14 +175,14 @@
                 <div class="am-form-group" id="address_div">
                     <label for="clientaddress" class="clientaddress"></label>
                     <div>
-                        <textarea id="clientaddress" placeholder="地址（必填）"></textarea>
+                        <textarea v-model="submitShopDetail.addressDetail" id="clientaddress" placeholder="地址（必填）"></textarea>
                     </div>
                 </div>
 
                 <div class="am-form-group" id="zipcode_div">
                     <label for="clientzipcode" class="clientzipcode"></label>
                     <div>
-                        <select class="select" id="clientzipcode"></select>
+                       <input v-model="submitShopDetail.postcodes" type="text" class="select" id="clientzipcode" placeholder="邮编">
                     </div>
                 </div>
 
@@ -197,7 +190,7 @@
                 <div class="am-form-group">
                     <label for="clientemail" class="clientemail"></label>
                     <div>
-                        <input type="email" id="clientemail" placeholder="E-Mail">
+                        <input type="email" v-model="submitShopDetail.email" id="clientemail" placeholder="E-Mail(必填)">
                     </div>
                 </div>
                 <div class="am-form-group" style="display: none;">
@@ -214,7 +207,7 @@
                 <div class="am-form-group">
                     <label for="clientotherinfo" class="clientotherinfo"></label>
                     <div>
-                        <textarea id="clientotherinfo" placeholder="備註:其他要求請備註"></textarea>
+                        <textarea v-model="submitShopDetail.tips" id="clientotherinfo" placeholder="備註:其他要求請備註"></textarea>
                     </div>
                 </div>
                 <div class="am-form-group">
@@ -229,7 +222,7 @@
                 </div>
                 <p id="postage" style="text-align: center;color: red"></p>
                 <div class="spec_Btns">
-                    <a href="javascript:;" class="btn btn-danger" id="tijiao">立即結算</a>
+                    <a href="javascript:;" class="btn btn-danger" id="tijiao" @click="submit">立即結算</a>
                 </div>
             </form>
         </div>
@@ -264,6 +257,8 @@
 
 <!--<script src="js/banner.min.js" crossorigin="anonymous"></script>-->
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="./js/layer.js"></script>
+<script src="./js/NT.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
@@ -275,34 +270,145 @@
                 headImg: '',
                 global_url: 'http://ka.ikallc.com/storage/',
                 selectedShopImg: '',
+                cityList: '',
+                areaList: '',
+                area: '',
+                selectedCityObj:{},
                 submitShopDetail: {
                     name: '',
                     number: '',
                     price: 0,
                     many_off: '',
-                    attr1: '',
-                    attr2: '',
+                    attr: [],
+                    consignee: '',
+                    tel: '',
+                    address: '',
+                    addressDetail: '',
+                    postcodes: '',
+                    email: '',
+                    tips: '',
+                    submitFlag: true
                 }
             }
         },
         created () {
+            this.cityList = cityList
             this.getData()
         },
         watch : {
 
         },
         methods: {
+            submit() {
+                var submitData = this.submitShopDetail
+                var option1 = this.shopData.attr1.name
+                var option2 = this.shopData.attr2.name
+                var flag = false
+                submitData.attr.forEach((item,index) =>{
+                    if(!item.attr1){
+                        this.show_msg('第'+ (index+1) +'商品' +option1 +'未选择')
+                        flag = true
+                        return
+                    }else if(!item.attr2){
+                        this.show_msg('第'+ (index+1) +'商品' +option2 +'未选择')
+                        flag = true
+                        return
+                    }
+                })
+                if(flag){
+                    return
+                }
+                if(!submitData.consignee){
+                    this.show_msg('请选择收货人')
+                    return
+                }
+                if(!submitData.tel){
+                    this.show_msg('请选择联系电话')
+                    return
+                }
+                if(submitData.tel.length<10 || !(/^09(\d){8}$/.test(submitData.tel))){
+                    this.show_msg('无效的手机号码')
+                    return
+                }
+                if(!this.area){
+                    this.show_msg('请选择城市')
+                    return
+                }
+                if(!submitData.addressDetail){
+                    this.show_msg('请填写详细地址')
+                    return
+                }
+                if(!submitData.email){
+                    this.show_msg('请填写邮政编码')
+                    return
+                }
+                if(!(/^(\d){3,6}$/.test(submitData.email))){
+                    this.show_msg('请填写邮政编码')
+                    return
+                }
+                $.ajax({
+                    type: "post",
+                    headers: {
+                        Accept: "application/json; charset=utf-8",
+                    },
+                    url: 'https://ka.ikallc.com/shop/37',
+                    data: {
+                        country: '',
+                        product: '',
+                        product_id: '',
+                        attribute: '',
+                        num: '',
+                        price: '',
+                        name: '',
+                        mob: '',
+                        code: '',
+                        province: '',
+                        city: '',
+                        area: '',
+                        address: '',
+                        guest: '',
+                        pay: ''
+                    },
+                    // dataType: "jsonp",
+                    success (res) {
+
+                    }
+                })
+            },
+            changeCity () {
+                this.area = ''
+            },
+            show_msg (info, time) {
+                if (typeof layer.tab === "function") {
+                    layer.msg(info)
+                } else {
+                    layer.open({content: info, skin: "msg", time: time || 2})
+                }
+            },
             chooseType (item) {
-                this.submitShopDetail.number = item.sale_count
                 this.submitShopDetail.price = item.price
                 this.submitShopDetail.name = item.name
+                console.log(this.submitShopDetail.number)
+                this.submitShopDetail.number = item.sale_count
+                var len = this.submitShopDetail.attr.length
+                if(item.sale_count>len){
+                    var count = item.sale_count - len
+                    for(var i=1;i<=count;i++){
+                        this.submitShopDetail.attr.push({
+                            attr1: '',
+                            attr2: ''
+                        })
+                    }
+                }else if(item.sale_count < len){
+                    this.submitShopDetail.attr.splice(item.sale_count,len - item.sale_count)
+                }
             },
-            chooseAttr1(item) {
-                this.submitShopDetail.attr1 = item.val
-                this.selectedShopImg = this.global_url + item.img.replace(/uploads/g,'')
+            chooseAttr1(item,index) {
+                // this.submitShopDetail.attr1 = item.val
+                this.submitShopDetail.attr[index].attr1 = item.val
             },
-            chooseAttr2 (item) {
-                this.submitShopDetail.attr2 = item
+            chooseAttr2 (item,index) {
+                this.submitShopDetail.attr[index].attr2 = item
             },
             getData () {
                 var self = this
@@ -319,6 +425,10 @@
                         self.shopTemplate = res.template
                         self.headImg = 'http://ka.ikallc.com/uploads/'+ res.detail.masterGraph
                         console.log(self.shopData)
+                        // self.submitShopDetail.number = res.many_off[0].sale_count
+                        // self.submitShopDetail.price = res.many_off[0].price
+                        // self.submitShopDetail.name = res.many_off[0].name
+                        self.chooseType(res.many_off[0])
                         self.selectedShopImg =self.global_url + res.attr1.attr[0].img.replace(/uploads/g,'')
                     }
                 })
