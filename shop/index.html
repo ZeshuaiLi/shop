@@ -91,7 +91,7 @@
     </div>
     <div class="cart-box-fixed">
         <div class="action-btn">
-            <a class="btn btn-danger go-buy" @click="submit">立即購買</a>
+            <a class="btn btn-danger go-buy" @click="scrollBuy">立即購買</a>
         </div>
     </div>
     <div id="goodsbody" class="view_panel_hd">
@@ -151,12 +151,17 @@
                         <input v-model="submitShopDetail.tel" type="text" id="clientphone" placeholder="聯絡電話（必填）">
                     </div>
                 </div>
-
+                <div class="am-form-group">
+                    <label for="number" class="clientzipcode"></label>
+                    <div>
+                        <input v-model="submitShopDetail.orderNum" type="number" id="number" placeholder="订购数量">
+                    </div>
+                </div>
                 <div class="am-form-group">
                     <label for="city" class="province"></label>
                     <div>
                         <select v-model="selectedCityObj" class="select" id="city" @change="changeCity">
-                            <option disabled selected="selected" value="-1" >请选择</option>
+                            <option disabled selected="selected" value="-1" >城市</option>
                             <option v-for="item in cityList" :key="item.id" :value="item">{{item.city}}</option>
                         </select>
                         <select v-model="area" class="select" id="area">
@@ -287,7 +292,8 @@
                     postcodes: '',
                     email: '',
                     tips: '',
-                    submitFlag: true
+                    submitFlag: true,
+                    orderNum: ''
                 }
             }
         },
@@ -328,6 +334,14 @@
                 }
                 if(submitData.tel.length<10 || !(/^09(\d){8}$/.test(submitData.tel))){
                     this.show_msg('无效的手机号码')
+                    return
+                }
+                if(!submitData.orderNum){
+                    this.show_msg('请输入订购数量')
+                    return
+                }
+                if(!(/^[1-9]\d*$/.test(submitData.orderNum))){
+                    this.show_msg('订购数量输入有误')
                     return
                 }
                 if(!this.area){
@@ -403,6 +417,9 @@
                     this.submitShopDetail.attr.splice(item.sale_count,len - item.sale_count)
                 }
             },
+            scrollBuy () {
+                document.getElementById("buy").scrollIntoView(true)
+            },
             chooseAttr1(item,index) {
                 // this.submitShopDetail.attr1 = item.val
                 this.submitShopDetail.attr[index].attr1 = item.val
@@ -432,6 +449,45 @@
                         self.selectedShopImg =self.global_url + res.attr1.attr[0].img.replace(/uploads/g,'')
                     }
                 })
+            },
+
+        },
+        mounted () {
+            function throttle(func, wait) {
+                var lastTime = null;
+                var timeout;
+                return function () {
+                    var context = this;
+                    var now = new Date;
+                    if (now - lastTime - wait > 0) {
+                        if (timeout) {
+                            clearTimeout(timeout);
+                            timeout = null
+                        }
+                        func.apply(context, arguments);
+                        lastTime = now
+                    } else if (!timeout) {
+                        timeout = setTimeout(function () {
+                            func.apply(context, arguments)
+                        }, wait)
+                    }
+                }
+            }
+            function check_top() {
+                var spec_Btns = $("#buy");
+                if (spec_Btns.offset()) {
+                    var ele_top = spec_Btns.offset().top;
+                    var top = (window.innerHeight ? window.innerHeight : $(window).height()) + $(window).scrollTop();
+                    if (top >= ele_top) {
+                        $(".cart-box-fixed").hide()
+                    } else {
+                        $(".cart-box-fixed").show()
+                    }
+                }
+            }
+            if ($("#buy").length) {
+                var throttleRun = throttle(check_top, 400);
+                window.addEventListener("scroll", throttleRun)
             }
         }
     })
