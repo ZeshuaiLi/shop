@@ -153,8 +153,8 @@
                 </div>
                 <div class="am-form-group">
                     <label for="number" class="clientzipcode"></label>
-                    <div>
-                        <input v-model="submitShopDetail.orderNum" type="number" id="number" placeholder="订购数量">
+                    <div class="num_box">
+                        <span class="jian" @click="reduce">-</span><input v-model="submitShopDetail.orderNum" type="number" id="number" placeholder="订购数量"><span class="jia" @click="add">+</span>
                     </div>
                 </div>
                 <div class="am-form-group">
@@ -279,6 +279,7 @@
                 areaList: '',
                 area: '',
                 selectedCityObj:{},
+                product_id: '',
                 submitShopDetail: {
                     name: '',
                     number: '',
@@ -299,12 +300,40 @@
         },
         created () {
             this.cityList = cityList
+            var id = this.getRequest(window.location.href).id
+            this.product_id = id
             this.getData()
         },
         watch : {
 
         },
         methods: {
+            add() {
+                if(this.submitShopDetail.orderNum){
+                    this.submitShopDetail.orderNum ++
+                }else{
+                    this.submitShopDetail.orderNum = 1
+                }
+            },
+            reduce () {
+                if(this.submitShopDetail.orderNum>1){
+                    this.submitShopDetail.orderNum --
+                }else{
+                    this.submitShopDetail.orderNum = 1
+                }
+            },
+            getRequest() {
+                var url = location.search; //获取url中"?"符后的字串
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for(var i = 0; i < strs.length; i ++) {
+                        theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+                    }
+                }
+                return theRequest;
+            },
             submit() {
                 var submitData = this.submitShopDetail
                 var option1 = this.shopData.attr1.name
@@ -352,40 +381,60 @@
                     this.show_msg('请填写详细地址')
                     return
                 }
-                if(!submitData.email){
+                if(!submitData.postcodes){
                     this.show_msg('请填写邮政编码')
                     return
                 }
                 if(!(/^(\d){3,6}$/.test(submitData.email))){
-                    this.show_msg('请填写邮政编码')
+                    this.show_msg('邮政编码输入有误')
                     return
                 }
+                console.log(submitData)
+                console.log(submitData)
+                var attribute = []
+                submitData.attr.forEach((item,index) => {
+                    attribute.push([
+                        {
+                            name: option1,
+                            value: item.attr1
+                        },
+                        {
+                            name: option2,
+                            value: item.attr2
+                        }
+                    ])
+                })
+                var self = this
                 $.ajax({
                     type: "post",
                     headers: {
                         Accept: "application/json; charset=utf-8",
                     },
-                    url: 'https://ka.ikallc.com/shop/37',
+                    url: 'https://ka.ikallc.com/api/createOrder2',
                     data: {
-                        country: '',
-                        product: '',
-                        product_id: '',
-                        attribute: '',
-                        num: '',
-                        price: '',
-                        name: '',
-                        mob: '',
-                        code: '',
+                        country: this.shopData.country.country,
+                        product: this.name,
+                        product_id: this.product_id,
+                        attribute: JSON.stringify(attribute),
+                        num: submitData.orderNum,
+                        price: submitData.price,
+                        name: submitData.consignee,
+                        mob: submitData.tel,
+                        code: submitData.postcodes,
                         province: '',
-                        city: '',
-                        area: '',
-                        address: '',
-                        guest: '',
-                        pay: ''
+                        city: this.selectedCityObj.city,
+                        area: this.area,
+                        address: submitData.addressDetail,
+                        guest: submitData.tips,
+                        pay: 'cod'
                     },
                     // dataType: "jsonp",
                     success (res) {
-
+                        if(res.code == 200){
+                            self.show_msg('订购成功')
+                        }else{
+                            self.show_msg('订购失败')
+                        }
                     }
                 })
             },
@@ -434,7 +483,7 @@
                     headers: {
                         Accept: "application/json; charset=utf-8",
                     },
-                    url: 'https://ka.ikallc.com/shop/37',
+                    url: 'https://ka.ikallc.com/shop/' + this.product_id,
                     // dataType: "jsonp",
                     success (res) {
                         self.shopData = res
