@@ -195,7 +195,7 @@
                 <div class="am-form-group">
                     <label for="clientemail" class="clientemail"></label>
                     <div>
-                        <input type="email" v-model="submitShopDetail.email" id="clientemail" placeholder="E-Mail(必填)">
+                        <input type="email" v-model="submitShopDetail.email" id="clientemail" placeholder="E-Mail">
                     </div>
                 </div>
                 <div class="am-form-group" style="display: none;">
@@ -234,25 +234,26 @@
 
     </div>
     <!--<div class="view_panel_hd" id="buy" style="padding-top:40px;">訂單商品</div>-->
-    <div class="am-popup" id="successWin">
-        <div class="popup_bg" onclick="hide_successwin();"></div>
+    <div class="am-popup" id="successWin" v-show="successWin">
+        <div class="popup_bg"></div>
         <div class="popup_content">
-            <span class="closeBtn" onclick="$(this).parent().parent().hide();location.reload();"></span>
+            <span class="closeBtn" @click="closeWin"></span>
             <div class="main_title am-text-center am-text-xl am-text-success">
                 <em class="ok">&nbsp;</em>下單成功，我們將儘快爲您配送！
             </div>
             <div class="main_orderinfo">
-                <div>訂單號：<span class="am-text-danger" id="orderid"></span></div>
-                <div>實付金額：<span id="orderprice"></span></div>
-                <div>收貨人：<span id="order_clientname"></span></div>
-                <div>聯絡電話：<span id="order_clientphone"></span></div>
-                <div>地　址：<span id="order_clientaddress"></span></div>
-                <div>商品详情：<span id="order_buygoods"></span></div>
+                <div>訂單號：<span class="am-text-danger" id="orderid">{{orderId}}</span></div>
+                <div>實付金額：<span id="orderprice">{{submitShopDetail.orderNum * submitShopDetail.price}}</span></div>
+                <div>收貨人：<span id="order_clientname">{{submitShopDetail.consignee}}</span></div>
+                <div>聯絡電話：<span id="order_clientphone">{{submitShopDetail.tel}}</span></div>
+                <div>地　址：<span id="order_clientaddress">{{selectedCityObj.city + area + submitShopDetail.addressDetail}}</span></div>
+                <div>商品详情：<span id="order_buygoods">
+                    {{shopDetailDesc}}
+                </span>
+                </div>
             </div>
             <div class="continue">
-
                 <a href="javascript:location.reload()">繼續瀏覽</a>
-
             </div>
 
         </div>
@@ -280,6 +281,9 @@
                 area: '',
                 selectedCityObj:{},
                 product_id: '',
+                successWin: false,
+                orderId: '',
+                shopDetailDesc: '',
                 submitShopDetail: {
                     name: '',
                     number: '',
@@ -294,7 +298,7 @@
                     email: '',
                     tips: '',
                     submitFlag: true,
-                    orderNum: ''
+                    orderNum: 1
                 }
             }
         },
@@ -308,6 +312,9 @@
 
         },
         methods: {
+            closeWin () {
+                window.location.reload()
+            },
             add() {
                 if(this.submitShopDetail.orderNum){
                     this.submitShopDetail.orderNum ++
@@ -385,14 +392,20 @@
                     this.show_msg('请填写邮政编码')
                     return
                 }
-                if(!(/^(\d){3,6}$/.test(submitData.email))){
-                    this.show_msg('邮政编码输入有误')
+                if(!(/^(\d){3,6}$/.test(submitData.postcodes))){
+                    this.show_msg('邮编输入有误')
+                    return
+                }
+                if(submitData.email && !/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(submitData.email)){
+                    this.show_msg('邮箱输入有误')
                     return
                 }
                 console.log(submitData)
                 console.log(submitData)
                 var attribute = []
+                var desc = submitData.orderNum +'件'+this.submitShopDetail.name + '，'
                 submitData.attr.forEach((item,index) => {
+                    desc = desc +  item.attr1 + '/' + item.attr2 + '，'
                     attribute.push([
                         {
                             name: option1,
@@ -413,7 +426,7 @@
                     url: 'https://ka.ikallc.com/api/createOrder2',
                     data: {
                         country: this.shopData.country.country,
-                        product: this.name,
+                        product: this.submitShopDetail.name,
                         product_id: this.product_id,
                         attribute: JSON.stringify(attribute),
                         num: submitData.orderNum,
@@ -426,12 +439,15 @@
                         area: this.area,
                         address: submitData.addressDetail,
                         guest: submitData.tips,
-                        pay: 'cod'
+                        pay: 'cod',
                     },
                     // dataType: "jsonp",
                     success (res) {
                         if(res.code == 200){
-                            self.show_msg('订购成功')
+                            // self.show_msg('订购成功')
+                            self.shopDetailDesc = desc
+                            self.orderId = res.data.orderId
+                            self.successWin = true
                         }else{
                             self.show_msg('订购失败')
                         }

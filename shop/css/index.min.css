@@ -1325,7 +1325,8 @@ span.btn_text {
 }
 
 #successWin .main_orderinfo {
-    margin-left: 15%
+    margin-left: 15%;
+    margin-right: 10%;
 }
 
 #successWin .main_orderinfo div {
@@ -1377,10 +1378,6 @@ hr {
     height: 1px;
     border: 0;
     border-top: 1px solid #f86161
-}
-
-.am-popup {
-    display: none
 }
 
 .am-cf {
