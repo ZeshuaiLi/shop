@@ -112,22 +112,28 @@
                 <div class="option_Item opt2" :class="{'active':item.name == submitShopDetail.name}" v-for="item in shopData.many_off" @click="chooseType(item)">{{item.name}}</div>
                 <!--<div class="option_Item opt2">啊哈哈</div>-->
             </div>
-            <div v-if="shopData && shopData.attr1 && shopData.attr1.name && shopData.attr1.attr.length > 0">
+            <div>
                 <div class="product_item" v-for="(count,index) in submitShopDetail.attr" :key = "index">
-                    <div class="spec_Title">{{index+1}}件{{shopData && shopData.attr1.name}}</div>
-                    <!--<div class="spec_List option1">-->
+                    <template v-show="shopData.attr1.length > 0">
+                        <div class="spec_Title" v-show="shopData.attr1 && shopData.attr1.name">{{index+1}}件{{shopData && shopData.attr1.name}}</div>
+                        <!--<div class="spec_List option1">-->
                         <!--<div class="option_Item opt2" :class="{'active':item.val == submitShopDetail.attr1}" v-for="item in shopData.attr1.attr" @click="chooseAttr1(item)">{{item.val}}</div>-->
-                    <!--</div>-->
-                    <div class="spec_List user-name">
-                        <div class="spec_Item opt1" :class="{'active':item.val == submitShopDetail.attr[index].attr1}" @click="chooseAttr1(item,index)" v-for="item in shopData.attr1.attr">
-                            <div class="sticky"></div>
-                            <img :src="global_url + item.img.replace(/uploads/g,'')">
-                            <span>{{item.val}}</span>
+                        <!--</div>-->
+                        <div class="spec_List user-name">
+                            <div class="spec_Item opt1" :class="{'active':item.val == submitShopDetail.attr[index].attr1}" @click="chooseAttr1(item,index)" v-for="item in shopData.attr1.attr">
+                                <div class="sticky"></div>
+                                <img :src="global_url + item.img.replace(/uploads/g,'')">
+                                <span>{{item.val}}</span>
+                            </div>
                         </div>
-                    </div>
+                    </template>
                     <div class="spec_Title">{{index+1}}件{{shopData && shopData.attr2.name}}</div>
                     <div class="spec_List option1" v-if="shopData && shopData.attr2 && shopData.attr2.values.length > 0">
                         <div class="option_Item opt2" :class="{'active':item == submitShopDetail.attr[index].attr2}" v-for="item in shopData.attr2.values" @click="chooseAttr2(item,index)">{{item}}</div>
+                    </div>
+                    <div class="spec_Title">{{index+1}}件{{shopData && shopData.attr3.name}}</div>
+                    <div class="spec_List option1" v-if="shopData && shopData.attr3 && shopData.attr3.values.length > 0">
+                        <div class="option_Item opt2" :class="{'active':item == submitShopDetail.attr[index].attr3}" v-for="item in shopData.attr3.values" @click="chooseAttr3(item,index)">{{item}}</div>
                     </div>
                 </div>
             </div>
@@ -234,7 +240,7 @@
 
     </div>
     <!--<div class="view_panel_hd" id="buy" style="padding-top:40px;">訂單商品</div>-->
-    <div class="am-popup" id="successWin" v-show="successWin">
+    <div class="am-popup" id="successWin" v-show="successWin" style="display: none;">
         <div class="popup_bg"></div>
         <div class="popup_content">
             <span class="closeBtn" @click="closeWin"></span>
@@ -345,67 +351,88 @@
                 var submitData = this.submitShopDetail
                 var option1 = this.shopData.attr1.name
                 var option2 = this.shopData.attr2.name
+                var option3 = this.shopData.attr3.name
                 var flag = false
                 submitData.attr.forEach((item,index) =>{
-                    if(!item.attr1){
-                        this.show_msg('第'+ (index+1) +'商品' +option1 +'未选择')
-                        flag = true
-                        return
-                    }else if(!item.attr2){
-                        this.show_msg('第'+ (index+1) +'商品' +option2 +'未选择')
-                        flag = true
+                    if(flag){
                         return
                     }
+                    if(this.shopData.attr1.length >0 && !item.attr1){
+                        this.show_msg('第'+ (index+1) +'商品' +option1 +'未選擇')
+                        flag = true
+                        return false
+                    }else if(this.shopData.attr2 && this.shopData.attr2.values.length >0 && !item.attr2){
+                        this.show_msg('第'+ (index+1) +'商品' +option2 +'未選擇')
+                        flag = true
+                        return false
+                    }else if(this.shopData.attr3 && this.shopData.attr3.values.length >0 && !item.attr3){
+                        this.show_msg('第'+ (index+1) +'商品' +option3 +'未選擇')
+                        flag = true
+                        return false
+                    }
                 })
+                console.log(flag)
                 if(flag){
                     return
                 }
                 if(!submitData.consignee){
-                    this.show_msg('请选择收货人')
+                    this.show_msg('請選擇收貨人')
                     return
                 }
                 if(!submitData.tel){
-                    this.show_msg('请选择联系电话')
+                    this.show_msg('請填寫聯繫電話')
                     return
                 }
                 if(submitData.tel.length<10 || !(/^09(\d){8}$/.test(submitData.tel))){
-                    this.show_msg('无效的手机号码')
+                    this.show_msg('無效的手機號碼')
                     return
                 }
                 if(!submitData.orderNum){
-                    this.show_msg('请输入订购数量')
+                    this.show_msg('請選擇訂購數量')
                     return
                 }
                 if(!(/^[1-9]\d*$/.test(submitData.orderNum))){
-                    this.show_msg('订购数量输入有误')
+                    this.show_msg('訂購數量輸入有誤')
                     return
                 }
                 if(!this.area){
-                    this.show_msg('请选择城市')
+                    this.show_msg('請選擇城市')
                     return
                 }
                 if(!submitData.addressDetail){
-                    this.show_msg('请填写详细地址')
+                    this.show_msg('請填寫詳細地址')
                     return
                 }
                 if(!submitData.postcodes){
-                    this.show_msg('请填写邮政编码')
+                    this.show_msg('請填寫郵政編碼')
                     return
                 }
                 if(!(/^(\d){3,6}$/.test(submitData.postcodes))){
-                    this.show_msg('邮编输入有误')
+                    this.show_msg('郵編輸入有誤')
                     return
                 }
                 if(submitData.email && !/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(submitData.email)){
-                    this.show_msg('邮箱输入有误')
+                    this.show_msg('郵箱輸入有誤')
                     return
                 }
-                console.log(submitData)
                 console.log(submitData)
                 var attribute = []
                 var desc = submitData.orderNum +'件'+this.submitShopDetail.name + '，'
                 submitData.attr.forEach((item,index) => {
-                    desc = desc +  item.attr1 + '/' + item.attr2 + '，'
+                    let typeArr = []
+                    if(item.attr1){
+                        // str = str +  item.attr1 + '/'
+                        typeArr.push(item.attr1)
+                    }
+                    if(item.attr2){
+                        // str = str +  item.attr2 + '/'
+                        typeArr.push(item.attr2)
+                    }
+                    if(item.attr3){
+                        // str = str +  item.attr3
+                        typeArr.push(item.attr3)
+                    }
+                    desc = desc + typeArr.join("/") + ','
                     attribute.push([
                         {
                             name: option1,
@@ -414,6 +441,10 @@
                         {
                             name: option2,
                             value: item.attr2
+                        },
+                        {
+                            name: option3,
+                            value: item.attr3
                         }
                     ])
                 })
@@ -449,7 +480,7 @@
                             self.orderId = res.data.orderId
                             self.successWin = true
                         }else{
-                            self.show_msg('订购失败')
+                            self.show_msg('訂購失敗')
                         }
                     }
                 })
@@ -475,7 +506,8 @@
                     for(var i=1;i<=count;i++){
                         this.submitShopDetail.attr.push({
                             attr1: '',
-                            attr2: ''
+                            attr2: '',
+                            attr3: '',
                         })
                     }
                 }else if(item.sale_count < len){
@@ -492,6 +524,11 @@
             chooseAttr2 (item,index) {
                 this.submitShopDetail.attr[index].attr2 = item
             },
+            chooseAttr3 (item,index) {
+                console.log(item,index)
+                this.submitShopDetail.attr[index].attr3 = item
+                console.log(this.submitShopDetail)
+            },
             getData () {
                 var self = this
                 $.ajax({
@@ -502,16 +539,22 @@
                     url: 'https://ka.ikallc.com/shop/' + this.product_id,
                     // dataType: "jsonp",
                     success (res) {
+                        document.title = res.detail.singleTitle
+                        document.querySelector('meta[name="keywords"]').content = res.detail.singleTitle
+                        document.querySelector('meta[name="description"]').content = res.detail.singleTitle
                         self.shopData = res
                         self.shopDetail = res.detail
                         self.shopTemplate = res.template
                         self.headImg = 'http://ka.ikallc.com/uploads/'+ res.detail.masterGraph
-                        console.log(self.shopData)
+                        // console.log(self.shopData)
+
                         // self.submitShopDetail.number = res.many_off[0].sale_count
                         // self.submitShopDetail.price = res.many_off[0].price
                         // self.submitShopDetail.name = res.many_off[0].name
                         self.chooseType(res.many_off[0])
-                        self.selectedShopImg =self.global_url + res.attr1.attr[0].img.replace(/uploads/g,'')
+                        if(res.attr1.length > 0  && res.attr1.attr[0].img){
+                            self.selectedShopImg =self.global_url + res.attr1.attr[0].img.replace(/uploads/g,'')
+                        }
                     }
                 })
             },
