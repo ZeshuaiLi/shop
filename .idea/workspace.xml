@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8c0e97f9-3c75-4b45-90e7-b43d689452e3" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop.zip" beforeDir="false" afterPath="$PROJECT_DIR$/shop.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop/css/index.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/shop/css/index.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/shop/index.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -22,7 +19,7 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/shop/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
+            <state relative-caret-position="12210">
               <caret line="407" column="70" selection-start-line="407" selection-start-column="70" selection-end-line="407" selection-end-column="70" />
               <folding>
                 <element signature="n#style#0;n#div#9;n#form#0;n#div#2;n#div#5;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -44,8 +41,8 @@
       <file leaf-file-name="index.min.css" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/shop/css/index.min.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="469">
-              <caret line="1330" lean-forward="true" selection-start-line="1330" selection-end-line="1330" />
+            <state relative-caret-position="600">
+              <caret line="1349" column="1" lean-forward="true" selection-start-line="1349" selection-start-column="1" selection-end-line="1349" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -154,7 +151,7 @@
   <component name="PropertiesComponent">
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="D:/work/test" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.standard" value="project" />
     <property name="node.js.selected.package.eslint" value="" />
@@ -196,30 +193,31 @@
       <workItem from="1567665323292" duration="2820000" />
       <workItem from="1568107328029" duration="8783000" />
       <workItem from="1568596102112" duration="3950000" />
+      <workItem from="1569200610496" duration="3451000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32303000" />
+    <option name="totallyTimeSpent" value="35754000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1935" height="1175" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13375461" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.09952607" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Run" order="2" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -232,6 +230,41 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/shop/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="12210">
+          <caret line="407" column="70" selection-start-line="407" selection-start-column="70" selection-end-line="407" selection-end-column="70" />
+          <folding>
+            <element signature="n#style#0;n#div#9;n#form#0;n#div#2;n#div#5;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#form#0;n#div#2;n#div#5;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop/js/NT.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="3" column="13" selection-start-line="3" selection-start-column="9" selection-end-line="3" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop/css/banner.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/style02/index.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shop/css/index.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40320">
+          <caret line="1330" lean-forward="true" selection-start-line="1330" selection-end-line="1330" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/shop/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="12570">
@@ -395,7 +428,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/shop/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
+        <state relative-caret-position="12210">
           <caret line="407" column="70" selection-start-line="407" selection-start-column="70" selection-end-line="407" selection-end-column="70" />
           <folding>
             <element signature="n#style#0;n#div#9;n#form#0;n#div#2;n#div#5;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -406,8 +439,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/shop/css/index.min.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="469">
-          <caret line="1330" lean-forward="true" selection-start-line="1330" selection-end-line="1330" />
+        <state relative-caret-position="600">
+          <caret line="1349" column="1" lean-forward="true" selection-start-line="1349" selection-start-column="1" selection-end-line="1349" selection-end-column="1" />
         </state>
       </provider>
     </entry>
